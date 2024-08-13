@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List Using Linked List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        #inp_note{
+            background-color: rgb(222, 200, 2);
+            border: 2px solid rgb(222, 200, 2);
+            justify-content: center;
+            align-items: center;
+            background-color: lightblue;
+            height: 500px;
+            width: 500px;
+            position: relative;
+        }
+        #view_note{
+            position: relative;
+            justify-content: center;
+            align-items: center;
+            background-color: yellow;
+            height: 500px;
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+<div id="inp_note">
+    <h1>To-Do List</h1>
+
+    <input type="text" id="taskInput" placeholder="Enter a new task">
+    <button onclick="addTask()">Add Task</button>
+    <!-- <button onclick="viewTasks()">View Tasks</button> -->
+     <br>
+    <input type="number" id="deleteInput" placeholder="Task number to delete">
+    <button onclick="deleteTask()">Delete Task</button>
+    <br>
+    <button onclick="clearTasks()">Clear All Tasks</button>
+</div>
+<div id="view_note">
+    <h2>Tasks:</h2>
+    <ul id="taskList"></ul>
+</div>
+    <script>
+        class Node {
+            constructor(task) {
+                this.task = task;
+                this.next = null;
+            }
+        }
+
+        class LinkedList {
+            constructor() {
+                this.head = null;
+            }
+
+            addTask(task) {
+                const newNode = new Node(task);
+                if (!this.head) {
+                    this.head = newNode;
+                } else {
+                    let current = this.head;
+                    while (current.next) {
+                        current = current.next;
+                    }
+                    current.next = newNode;
+                }
+                console.log("Task added:", task); // Debugging statement
+            }
+
+            viewTasks() {
+                let current = this.head;
+                let index = 1;
+                const taskList = document.getElementById('taskList');
+                taskList.innerHTML = '';  // Clear the existing list
+
+                while (current) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${index}. ${current.task}`;
+                    taskList.appendChild(listItem);
+                    current = current.next;
+                    index++;
+                }
+                console.log("Tasks viewed"); // Debugging statement
+            }
+
+            deleteTask(position) {
+                if (position === 1) {
+                    this.head = this.head.next;
+                } else {
+                    let current = this.head;
+                    for (let i = 0; i < position - 2; i++) {
+                        if (current.next) {
+                            current = current.next;
+                        }
+                    }
+                    current.next = current.next.next;
+                }
+                console.log("Task deleted at position:", position); // Debugging statement
+            }
+
+            clearTasks() {
+                this.head = null;
+                console.log("All tasks cleared"); // Debugging statement
+            }
+        }
+
+        // Create an instance of LinkedList
+        const toDoList = new LinkedList();
+
+        // Add task from input
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const task = taskInput.value.trim();
+            if (task) {
+                toDoList.addTask(task);
+                taskInput.value = '';  // Clear input field
+                viewTasks();  // Update task list display
+            }
+        }
+
+        // View all tasks
+        function viewTasks() {
+            toDoList.viewTasks();
+        }
+
+        // Delete task by position
+        function deleteTask() {
+            const deleteInput = document.getElementById('deleteInput');
+            const position = parseInt(deleteInput.value.trim(), 10);
+            if (!isNaN(position) && position > 0) {
+                toDoList.deleteTask(position);
+                deleteInput.value = '';  // Clear input field
+                viewTasks();  // Update task list display
+            }
+        }
+
+        // Clear all tasks
+        function clearTasks() {
+            toDoList.clearTasks();
+            viewTasks();  // Update task list display
+        }
+    </script>
+
+</body>
+</html>
